@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/73214439/107851772-3d549080-6dc1-11eb-8136-d4d261803af4.png" width="70" height="70"> League Bot 
+# <img src="https://user-images.githubusercontent.com/73214439/107851772-3d549080-6dc1-11eb-8136-d4d261803af4.png" width="50" height="68"> League Bot 
 
 League Bot is a Discord Bot built using [discord.js](https://discord.js.org) to give utility to League Of Legends discord servers.
 
