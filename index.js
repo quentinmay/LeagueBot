@@ -1621,7 +1621,6 @@ async function requestLeagueAccount(channel, user, contents, args) {
 }
 
 function register(channel, user, contents) {
-    //contents = leagueaccount draven player lol
     var contentArray = contents.split(' ');
     getElyonMemberFromDiscord(user.id).then(function (elyonMember) {
         if (!elyonMember) {
@@ -2413,13 +2412,6 @@ client.on('message', (msg) => {
                     message.edit(exampleEmbed);
                 })
             }
-                //console.log(guildMembers)
-                // for(guild.members.)
-                //msg.channel.send("```js\nfunction foo(bar) {\n  console.log(bar);\n}\n\nfoo(1);```");
-                // let guild = client.guilds.cache.find(g => g.id === config.serverID);
-                // let emoji = guild.emojis.cache.find(emoji => emoji.name === 'vaxius')
-                // console.log(emoji)
-                // msg.channel.send(`${emoji}`)
             })
                 break;
             case 'entrance':
