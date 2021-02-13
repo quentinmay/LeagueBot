@@ -1492,16 +1492,22 @@ function reloadConfig() {
         }
         fs.readFile(configFile, 'utf8', function (err, json) {
             if (err) reject(false);
-            config = JSON.parse(json);
-            token = config.discordToken;
-            Member = require(config.elyonMemberClass);
-            LeagueAccount = require(config.LeagueAccountClass);
-            ListeningMessageEmoji = require(config.ListeningMessageEmojiClass)
-            ModApprovalEmoji = require(config.ModApprovalEmojiClass)
-            RSVPApprovalEmoji = require(config.RSVPApprovalEmojiClass)
-            QuickInhouseListeningMessageEmoji = require(config.QuickInhouseListeningMessageEmojiClass);
-            mongoURI = `${config.mongoURIPart1}${config.mongoUsername}${config.mongoURIPart2}${config.mongoPass}${config.mongoURIPart3}${config.dbName}${config.mongoURIPart4}`
-            resolve(true);
+            try {
+                config = JSON.parse(json);
+                token = config.discordToken;
+                Member = require(config.elyonMemberClass);
+                LeagueAccount = require(config.LeagueAccountClass);
+                ListeningMessageEmoji = require(config.ListeningMessageEmojiClass)
+                ModApprovalEmoji = require(config.ModApprovalEmojiClass)
+                RSVPApprovalEmoji = require(config.RSVPApprovalEmojiClass)
+                QuickInhouseListeningMessageEmoji = require(config.QuickInhouseListeningMessageEmojiClass);
+                mongoURI = `${config.mongoURIPart1}${config.mongoUsername}${config.mongoURIPart2}${config.mongoPass}${config.mongoURIPart3}${config.dbName}${config.mongoURIPart4}`
+                resolve(true);
+            } catch (err) {
+                console.log("Issue with config file. Make sure that all necessary values are correct.")
+                console.log(err);
+                process.exit(0);
+            }
         });
     });
 }
