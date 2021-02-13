@@ -1,3 +1,9 @@
+/*
+LeagueAccount objects is a class made specifically for managing discord users different LeagueOfLegends accounts. Functionality included are functions to
+retrieve the players highest ranks, retrieving their league Accounts unique ID (summonerID), retrieving a profileIconID attached to their league account,
+logging that account type (main or alternate accounts) and etc. Mostly based on Riot official API. Required riot API token.
+*/
+
 const rp = require('request-promise');
 var encodeUrl = require('encodeurl')
 
@@ -20,16 +26,19 @@ class LeagueAccount {
         if (!type) type = null; 
         if (!lastRefreshed) lastRefreshed = Date.now(); 
         if (!profileIconId) profileIconId = null; 
-        this.summonerID = summonerID;
-        this.leagueName = leagueName;
-        this.leagueRankTier = leagueRankTier;
-        this.leagueRankRank = leagueRankRank;
-        this.type = type; //main or alt
-        this.lastRefreshed = lastRefreshed;
-        this.profileIconId = profileIconId;
+        this.summonerID = summonerID; //Unique ID given to every league account since League names can change
+        this.leagueName = leagueName; //Last registered leagueName
+        this.leagueRankTier = leagueRankTier; //Ex. Bronze
+        this.leagueRankRank = leagueRankRank; //Ex. IV
+        this.type = type; //whether is main account or alternate account
+        this.lastRefreshed = lastRefreshed; //Date in milliseconds when the leagueAccount was last refreshed
+        this.profileIconId = profileIconId; //Just the profileIconID. Not very important but sometimes nice to have
         
     }
 
+/*
+Every so often, each league account that is linked to a discord user is refreshed to get their updated highest rank. This by default runs once a day.
+*/
     async refreshAccount() {
         const rankSearch = {
             url: 'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/' + this.summonerID,
@@ -43,7 +52,6 @@ class LeagueAccount {
         };
 
         var res = await riotAPIRequest(rankSearch);
-
             if (!res) {
                 return(false);
             } else {
@@ -63,7 +71,9 @@ class LeagueAccount {
  
     }
 
-
+/*
+Better async function for easy creation of a leagueAccount. Used in all populateElyonMemberList functions.
+*/
     static createLeagueAccount(leagueAccountJSON) {
         return new Promise(function(resolve, reject) {
             resolve(new LeagueAccount(leagueAccountJSON.summonerID, leagueAccountJSON.leagueName, leagueAccountJSON.leagueRankTier, leagueAccountJSON.leagueRankRank, leagueAccountJSON.type, leagueAccountJSON.lastRefreshed, leagueAccountJSON.profileIconId))
@@ -74,12 +84,12 @@ class LeagueAccount {
 
     setupAccount(leagueName, leagueAccount) {
         return new Promise(function(resolve, reject) {
-        
-        
         });
     }
 
-
+/*
+By default, rank saves Tier (Bronze) and rank (IV) seperately. This is a function to put a number to their overall rank for easier handling. 
+*/
     async getRankEnum() {
         
         var rankTierNum = (await LeagueAccount.parseRankTierEnum(this.leagueRankTier)) * 10;
@@ -88,7 +98,10 @@ class LeagueAccount {
         
     }
 
-
+/*
+Used to parse the rank string representation (IV) into an enumerated int representation. I turns into 4 because its a larger number. Higher the number,
+the higher the rank.
+*/
     static parseRankEnum(rankRank) {
         return new Promise(function(resolve, reject) {
             if (!rankRank) resolve(0);
@@ -112,7 +125,10 @@ class LeagueAccount {
             });
     }
 
-    
+/*
+Used to parse the tier string representation (IRON) into an enumerated int representation. I turns CHALLENGER into 9 because its a larger number. Higher the number,
+the higher the rank tier.
+*/
 static parseRankTierEnum(rankTier) {
     return new Promise(function(resolve, reject) {
         if (!rankTier) resolve(0);
@@ -152,7 +168,9 @@ static parseRankTierEnum(rankTier) {
     })
 
 }
-
+/*
+Method to reverse enumerated rank back into string representation like what is saved in the data section.
+*/
     static parseRankFromEnum(num) {
         return new Promise(function(resolve, reject) {
         if (isNaN(num)) resolve({tier: "UNRANKED", rank: "0"})
@@ -212,6 +230,10 @@ static parseRankTierEnum(rankTier) {
             resolve(rank);
         });
     }
+/*
+When people search for their leagueAccount, they generally only can go by name and dont have summonerID handy. This just lets us make an APIRequest to riotAPI
+and search for the summoner who owns the LeagueAccount. Then we also do a second API request to find their league account
+*/
     static async findLeagueAccountByName(leagueName) {
             leagueName = encodeUrl(leagueName);
             var leagueAccount = new LeagueAccount();
@@ -269,7 +291,10 @@ static parseRankTierEnum(rankTier) {
             
     }
 }
-
+/*
+Standard API request format for riotAPIRequests. Put here for simplicity for all the functions above. Specifically uses request promises so that we may
+stay promise based and have no errors.
+*/
 function riotAPIRequest(options) {
     return new Promise(function(resolve, reject) {
     options["resolveWithFullResponse"] = true;

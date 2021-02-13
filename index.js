@@ -1955,7 +1955,9 @@ function setSubRole(channel, user, withoutCommand) {
     });
 }
 
-
+/*
+Assigns a favorite champion that the discord user chooses. Can be just about any string given. This is data stored to the member data section.
+*/
 function setFavoriteChamps(channel, user, withoutCommand) {
     try {
         var userMention = withoutCommand.split(" ")[0];
@@ -1996,7 +1998,9 @@ function setFavoriteChamps(channel, user, withoutCommand) {
     });
 }
 
-
+/*
+Registers a given league account to a discord user.
+*/
 function addLeagueAccount(channel, user, withoutCommand) {
     try {
         var userMention = withoutCommand.split(" ")[0];
@@ -2065,7 +2069,9 @@ function addLeagueAccount(channel, user, withoutCommand) {
 }
 
 
-
+/*
+Strips the given leagueAccount from a discord user. 
+*/
 function removeLeagueAccount(channel, user, withoutCommand) {
     try {
         var userMention = withoutCommand.split(" ")[0];
@@ -2134,6 +2140,10 @@ function removeLeagueAccount(channel, user, withoutCommand) {
     })
 }
 
+/*
+Functionality for quickInhouse command. Sends a message that quickly sets up and allows people to react with their preferred role to get a fast idea of what
+multiple people would want to play for a theoretical inhouse match. 
+*/
 async function quickInhouse(channel, user) {
 
     var guildMember = await getGuildMemberFromServerIDAndUserID(config.serverID, user.id)
@@ -2166,6 +2176,9 @@ async function quickInhouse(channel, user) {
     }
 }
 
+/*
+Sends a fancy looking custom discord Embed with a list of all the available commands assigned to the bot. Mostly self-explanatory
+*/
 function commandList(channel) {
     var commandListEmbed = {
         color: 9177243,
@@ -2245,7 +2258,9 @@ function commandList(channel) {
     });
 }
 
-
+/*
+RSVP functionality here.
+*/
 async function sendRSVP(textChannel) {
     try {
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
@@ -2322,7 +2337,10 @@ async function sendRSVP(textChannel) {
     }
 }
 
-
+/*
+This is functionality made specifically to check to see if someone was given a role for ex. "Main: Top". A simpler solution to attach a new role to someones
+league account than to have to go through the written command 0setmainrole ___ ___. Easier for moderators.
+*/
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
     //Check if any new roles were added
     var addedRoles = [];
@@ -2356,6 +2374,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
         let defaultBotChannel = guild.channels.cache.find(channel => channel.name === config.defaultBotChannelName);
         for (var newRole of addedRoles) {
+            //If the newRole is a rankRole (Main:top, Sub:top, etc) then we will register role and swap whatever they currently have to that role.
             switch (newRole.name) {
                 case "Main: top":
                 case "Main: jungle":
@@ -2381,12 +2400,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 
 });
 
-
+/*
+Primary discord message command handler. Chat commands must be added here to be considered.
+*/
 client.on('message', (msg) => {
     if (msg.author.bot == true) return;
     if (msg.channel.type != "text" && msg.author.id != config.devID) return; //dev will bypass and be able to work through dms
-    //console.log(msg.content.startsWith(config.commandPrefix));
-    //console.log(msg.content);
 
     if (msg.content.startsWith(config.commandPrefix)) {
 
@@ -2674,7 +2693,7 @@ function joinAndTTS(msg, contents) {
 }
 
 /*
-**To be removed** Testing fun functions
+**To be removed** Testing fun functions. WILL NOT WORK UNLESS the song file exists.
 */
 async function entrance(msg, channelID) {
     try {
