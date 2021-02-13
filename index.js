@@ -1485,6 +1485,11 @@ function fetchRoleByName(roleName) {
 
 function reloadConfig() {
     return new Promise(function (resolve, reject) {
+        if (!fs.existsSync(configFile)) {
+            resolve(false);
+            console.log('No config file found. Goto github repository for more info. Closing')
+            process.exit(0);
+        }
         fs.readFile(configFile, 'utf8', function (err, json) {
             if (err) reject(false);
             config = JSON.parse(json);
