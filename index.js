@@ -2,6 +2,7 @@ var configFile = './' + __filename.slice(__dirname.length + 1, -3) + 'Config.jso
 const Discord = require('discord.js');
 const fs = require('fs');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
+const rp = require('request-promise');
 const MongoClient = require('mongodb').MongoClient;
 const text2wav = require('text2wav');
 
@@ -28,8 +29,9 @@ client.on('ready', async () => {
 
     //NECESSARY
     onBoot();
+    
     console.log("Started!");
-
+    checkServerConfiguration();
     /*
         try {
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
@@ -1483,6 +1485,84 @@ function fetchRoleByName(roleName) {
     });
 }
 
+async function checkServerConfiguration() {
+    var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
+                         "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
+    var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"]
+    var requiredTextChannel = config.defaultBotChannelName;
+    try {
+        let guild = client.guilds.cache.find(g => g.id === config.serverID);
+        var guildRoles = guild.roles.cache;
+        var rolesNotFound = [];
+        for (var requiredRole of requiredRoles) {
+            if (!guildRoles.find(role => role.name === requiredRole)) {
+                rolesNotFound.push(requiredRole);
+            }
+        }
+        var guildEmojis = guild.emojis.cache;
+        var emojisNotFound = [];
+        for (var requiredEmoji of requiredEmojis) {
+            if (!guildEmojis.find(emoji => emoji.name === requiredEmoji)) {
+                emojisNotFound.push(requiredEmoji);
+            }
+        }
+        var guildTextChannels = guild.channels.cache.filter(channel => channel.type === "text");
+        var requiredTextChannelExists = guildTextChannels.find(channel => channel.name === requiredTextChannel);
+        if (emojisNotFound.length > 0)console.log(`These required emojis not found: ${emojisNotFound}`)
+        if (rolesNotFound.length > 0)console.log(`These required roles not found: ${rolesNotFound}`)
+        if (!requiredTextChannelExists)console.log(`This required text channel wasn't found: ${requiredTextChannel}`)
+        if (rolesNotFound.length > 0 || emojisNotFound.length > 0 || !requiredTextChannelExists)console.log(`Type 0configure command to auto add them or there could be issues.`);
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}
+
+async function autoServerConfiguration() {
+    try {
+        var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
+                             "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
+        var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"]
+        var requiredTextChannel = config.defaultBotChannelName;
+        let guild = client.guilds.cache.find(g => g.id === config.serverID);
+        var guildRoles = guild.roles;
+
+        for (var requiredRole of requiredRoles) {
+            if (!guildRoles.cache.find(role => role.name === requiredRole)) {
+                console.log(`Adding role:${requiredRole}`)
+                await guildRoles.create({
+                    data: {
+                        name: requiredRole,
+                        permissions: [],
+                        color: 'WHITE'
+                },
+                reason: 'Necessary roles for League Bot.'})
+            }
+        }
+        var guildEmojis = guild.emojis;
+        for (var requiredEmoji of requiredEmojis) {
+            if (!guildEmojis.cache.find(emoji => emoji.name === requiredEmoji)) {
+                console.log(`Adding emoji:${requiredEmoji}`)
+                await guildEmojis.create(`./icons/${requiredEmoji}.png`, requiredEmoji);
+            }
+        }
+        var guildTextChannels = guild.channels.cache.filter(channel => channel.type === "text");
+        var requiredTextChannelExists = guildTextChannels.find(channel => channel.name === requiredTextChannel);
+        if (!requiredTextChannelExists) {
+            console.log(`Adding text channel: ${requiredTextChannel}`)
+            await guild.channels.create(requiredTextChannel, {
+                type:'text'
+            })
+        }
+
+        return true;
+    } catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
 function reloadConfig() {
     return new Promise(function (resolve, reject) {
         if (!fs.existsSync(configFile)) {
@@ -2443,6 +2523,21 @@ client.on('message', (msg) => {
                 })
             }
             })
+                break;
+            case 'configure':
+                isModerator(msg.member).then(function (decision) {
+                    if (decision) {
+                        autoServerConfiguration().then(function(status) {
+                            if (status) {
+                                msg.channel.send("`Auto configuration completed.`");
+                            } else {
+                                msg.channel.send("`Auto configuration failed at some point.`");
+                            }
+                        })
+                    }else {
+                        msg.channel.send("`This command requires bot access.`");
+                    }
+                });
                 break;
             case 'entrance':
                 if (msg.author.id == config.devID) {
