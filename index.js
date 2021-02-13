@@ -2525,8 +2525,7 @@ client.on('message', (msg) => {
             })
                 break;
             case 'configure':
-                isModerator(msg.member).then(function (decision) {
-                    if (decision) {
+                if (msg.member.id == config.devID) {
                         autoServerConfiguration().then(function(status) {
                             if (status) {
                                 msg.channel.send("`Auto configuration completed.`");
@@ -2534,10 +2533,9 @@ client.on('message', (msg) => {
                                 msg.channel.send("`Auto configuration failed at some point.`");
                             }
                         })
-                    }else {
-                        msg.channel.send("`This command requires bot access.`");
+                    } else {
+                        msg.channel.send("`This command is only available to the dev.`");
                     }
-                });
                 break;
             case 'entrance':
                 if (msg.author.id == config.devID) {
