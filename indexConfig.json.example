@@ -1,9 +1,10 @@
 {
     "discordToken": "",
-    "commandPrefix": "!",
-    "defaultBotChannelName":"general",
     "devID": "",
     "serverID":"",
+    "riotAPIToken": "",
+    "commandPrefix": "!",
+    "defaultBotChannelName":"general",
     "modRole":"Bot Access",
     "status":"STREAMING",
     "twitchLink":"https://www.twitch.tv/twitch",
@@ -18,7 +19,6 @@
     "QuickInhouseListeningMessageEmojiClass": "./util/QuickInhouseListeningMessageEmoji.js",
     "checkMarkEmojiName":"✅",
     "xMarkEmojiName":"❎",
-    "riotAPIToken": "",
     "refreshLeagueAccountTime": "86400000",
     "readMemberDataFromFileInsteadOfSheets": true,
     "writeMemberDataToFileInsteadOfSheets": true,
@@ -30,6 +30,6 @@
     "mongoURIPart2":"",
     "mongoPass":"",
     "mongoURIPart3":"",
-    "dbName": "Cluster0",
+    "dbName": "",
     "mongoURIPart4":""
 }
