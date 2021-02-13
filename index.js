@@ -2,7 +2,6 @@ var configFile = './' + __filename.slice(__dirname.length + 1, -3) + 'Config.jso
 const Discord = require('discord.js');
 const fs = require('fs');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
-const rp = require('request-promise');
 const MongoClient = require('mongodb').MongoClient;
 const text2wav = require('text2wav');
 
@@ -1488,7 +1487,7 @@ function fetchRoleByName(roleName) {
 async function checkServerConfiguration() {
     var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
                          "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
-    var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"]
+    var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED"]
     var requiredTextChannel = config.defaultBotChannelName;
     try {
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
@@ -1511,7 +1510,7 @@ async function checkServerConfiguration() {
         if (emojisNotFound.length > 0)console.log(`These required emojis not found: ${emojisNotFound}`)
         if (rolesNotFound.length > 0)console.log(`These required roles not found: ${rolesNotFound}`)
         if (!requiredTextChannelExists)console.log(`This required text channel wasn't found: ${requiredTextChannel}`)
-        if (rolesNotFound.length > 0 || emojisNotFound.length > 0 || !requiredTextChannelExists)console.log(`Type 0configure command to auto add them or there could be issues.`);
+        if (rolesNotFound.length > 0 || emojisNotFound.length > 0 || !requiredTextChannelExists)console.log(`Type ${config.commandPrefix}configure command to auto add them or there could be issues.`);
         return true;
     } catch (err) {
         console.log(err);
@@ -1523,7 +1522,7 @@ async function autoServerConfiguration() {
     try {
         var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
                              "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
-        var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON"]
+        var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED"]
         var requiredTextChannel = config.defaultBotChannelName;
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
         var guildRoles = guild.roles;
@@ -2866,7 +2865,9 @@ Initial mongoDB function to load the mongo database and create the mongoDB objec
 */
 function loadMongoDB() {
     return new Promise(function (resolve, reject) {
-
+        if (config.writeMemberDataToFileInsteadOfSheets && config.readMemberDataFromFileInsteadOfSheets) {
+            resolve(false);
+        } else {
 
         const client = new MongoClient(mongoURI, {
             useNewUrlParser: true,
@@ -2886,6 +2887,7 @@ function loadMongoDB() {
         } catch (err) {
             resolve(false);
         }
+    }
     })
 }
 
