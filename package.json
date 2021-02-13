@@ -1,0 +1,21 @@
+{
+  "name": "leaguebot",
+  "version": "1.0.0",
+  "description": "Discord.js based discord bot to primarily provide utility for league of legends discord servers",
+  "main": "index.js",
+  "author": "Quentin May <quentinemay@gmail.com>",
+  "homepage": "https://github.com/quentinmay/LeagueBot",
+  "repository": "github:quentinmay/LeagueBot",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "encodeurl": "^1.0.2",
+    "google-spreadsheet": "^3.1.15",
+    "mongodb": "^3.6.4",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "text2wav": "0.0.13"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}
