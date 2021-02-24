@@ -1487,7 +1487,7 @@ function fetchRoleByName(roleName) {
 async function checkServerConfiguration() {
     var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
                          "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
-    var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED"]
+    var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED", "top", "jungle", "mid", "adc", "supp"]
     var requiredTextChannel = config.defaultBotChannelName;
     try {
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
@@ -1522,7 +1522,7 @@ async function autoServerConfiguration() {
     try {
         var requiredRoles = [config.modRole, "Main: top","Main: jungle","Main: mid","Main: adc","Main: supp","Sub: top","Sub: jungle","Sub: mid","Sub: adc","Sub: supp", 
                              "CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "rsvp", "norsvp", "voice"]
-        var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED"]
+        var requiredEmojis = ["CHALLENGER", "GRANDMASTER", "MASTER", "DIAMOND", "PLATINUM", "GOLD", "SILVER", "BRONZE", "IRON", "UNRANKED", "top", "jungle", "mid", "adc", "supp"]
         var requiredTextChannel = config.defaultBotChannelName;
         let guild = client.guilds.cache.find(g => g.id === config.serverID);
         var guildRoles = guild.roles;
