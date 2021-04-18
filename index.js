@@ -2548,7 +2548,7 @@ client.on('message', (msg) => {
                     utc.setHours(utc.getHours() - 8) // converts to PST by subtracting 8 hours from UTC time.
                     var message = "`" + `Boot Time: ${utc.toLocaleString()} PST` + "`\n"
                     message += "`" + `Uptime: ${convertTime(parseInt(uptime / 1000))}` + "`";
-                    message += "`" + `Uptime2: ${convertTime2(parseInt(uptime / 1000))}` + "`";
+                    // message += "`" + `Uptime2: ${convertTime2(parseInt(uptime / 1000))}` + "`";
                     msg.channel.send(message);
                 } catch(err) {
                     console.log(err);
