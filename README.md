@@ -61,6 +61,10 @@ Only top 4 required to change for basic functionality.
 }
 ```
 
+### Discord Bot Setup
+Ensure that you have privelaged gateway intents enabled on your [developer portal](https://discord.com/developers/applications)
+![image](https://user-images.githubusercontent.com/73214439/115173596-7e487a00-a07c-11eb-9877-f2cf1441ee75.png)
+
 ## 🚀Initial Startup
 Just startup the script now that everything has been built and you've filled your config file.
 ```bash
