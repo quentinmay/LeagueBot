@@ -7,7 +7,7 @@
   "homepage": "https://github.com/quentinmay/LeagueBot",
   "repository": "github:quentinmay/LeagueBot",
   "dependencies": {
-    "discord.js": "^12.5.1",
+    "discord.js": "^12.5.3",
     "encodeurl": "^1.0.2",
     "google-spreadsheet": "^3.1.15",
     "mongodb": "^3.6.4",

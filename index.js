@@ -4,6 +4,7 @@ const fs = require('fs');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
 const MongoClient = require('mongodb').MongoClient;
 const text2wav = require('text2wav');
+var util = require('util');
 
 var Member, LeagueAccount, ListeningMessageEmoji, ModApprovalEmoji, RSVPApprovalEmoji, QuickInhouseListeningMessageEmoji;
 
@@ -334,10 +335,18 @@ async function refreshLeagueAccounts() {
     }
     var refreshList = [];
     refreshingLeagueAccounts = true;
+    var discordMembersIDArray = [];
     for (var member of elyonMembersList.members) {
-        var guildMember = await getGuildMemberFromServerIDAndUserID(config.serverID, member.discordID)
+        discordMembersIDArray.push(member.discordID)
+    }
+    
+    var discordMembers = await getGuildMembersFromServerIDAndUserIDArray(config.serverID, discordMembersIDArray);
+
+    for (var member of elyonMembersList.members) {
+        
+        var guildMember = discordMembers.find(discordMember => discordMember.user.id == member.discordID);
         if (!guildMember) {
-            console.log(`${member.discordName} is not in the discord server. Not refreshing his league accounts.`);
+            console.log(`${member.discordName} - (${member.discordID}) is not in the discord server. Not refreshing his league accounts.`);
             continue;
         }
         for (var leagueAccount of member.leagueAccounts) {
@@ -1603,18 +1612,37 @@ async function getGuildMembersInVoiceChannel(serverID, voiceChannelID) {
 
 }
 
-async function getGuildMemberFromServerIDAndUserID(serverID, id) {
-    for (const guild of client.guilds.cache) {
-        if (guild[1].id == serverID) {
-            for (const member of guild[1].members.cache) {
-                if (member[1].id == id) {
-                    return member[1];
 
-                }
+//Gets an array of guildMembers from an array of discord userIDs. Only returns guildMembers that still within the server.
+async function getGuildMembersFromServerIDAndUserIDArray(serverID, idArray) {
+    try {
+        var guild = await client.guilds.fetch(serverID);
+        var members = await guild.members.fetch();
+        var membersList = [];
+        for (id of idArray) {
+            var guildMember = members.find(m => m.user.id == id);
+            if (guildMember) {
+                membersList.push(guildMember);
             }
         }
+        return membersList;
+    } catch(err) {
+        console.log(err)
+        return undefined;
     }
-    return undefined;
+
+}
+
+
+async function getGuildMemberFromServerIDAndUserID(serverID, id) {
+    try {
+        var guild = await client.guilds.fetch(serverID);
+        
+        var member = await guild.members.fetch(id);
+        return member;
+    } catch(err) {
+        return undefined;
+    }
 
 }
 
@@ -2548,7 +2576,7 @@ client.on('message', (msg) => {
                     utc.setHours(utc.getHours() - 8) // converts to PST by subtracting 8 hours from UTC time.
                     var message = "`" + `Boot Time: ${utc.toLocaleString()} PST` + "`\n"
                     message += "`" + `Uptime: ${convertTime(parseInt(uptime / 1000))}` + "`";
-                    message += "`" + `Uptime2: ${convertTime2(parseInt(uptime / 1000))}` + "`";
+                    // message += "`" + `Uptime2: ${convertTime2(parseInt(uptime / 1000))}` + "`";
                     msg.channel.send(message);
                 } catch(err) {
                     console.log(err);
