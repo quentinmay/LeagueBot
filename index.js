@@ -54,6 +54,7 @@ client.on('ready', async () => {
 
 
 client.on('guildMemberAdd', async (guildMember) => {
+    if (config.createAccountOnDiscordJoin == false) return;
     registerNewGuildMemberLeagueAccount(guildMember)
 
 });
@@ -2468,6 +2469,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     //If nickname changed
     if (oldMember.nickname != newMember.nickname) {
         if (newMember.nickname) {
+            if (config.updateAccountByDiscordName == false) return;
             var elyonMember = await getElyonMemberFromDiscord(newMember.id);
             if (elyonMember.leagueAccounts.length == 0) {
                 let guild = client.guilds.cache.find(g => g.id === config.serverID);
