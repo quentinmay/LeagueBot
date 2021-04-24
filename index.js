@@ -54,8 +54,10 @@ client.on('ready', async () => {
 
 
 client.on('guildMemberAdd', async (guildMember) => {
-    if (config.createAccountOnDiscordJoin == false) return;
-    registerNewGuildMemberLeagueAccount(guildMember)
+    if (config.createAccountOnDiscordJoin == true) {
+        registerNewGuildMemberLeagueAccount(guildMember)
+    }
+    
 
 });
 
@@ -2469,13 +2471,14 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
     //If nickname changed
     if (oldMember.nickname != newMember.nickname) {
         if (newMember.nickname) {
-            if (config.updateAccountByDiscordName == false) return;
-            var elyonMember = await getElyonMemberFromDiscord(newMember.id);
-            if (elyonMember.leagueAccounts.length == 0) {
-                let guild = client.guilds.cache.find(g => g.id === config.serverID);
-                let defaultBotChannel = guild.channels.cache.find(channel => channel.name === config.defaultBotChannelName);
-                defaultBotChannel.send("`" + `${oldMember.displayName} changed nickname to ${newMember.displayName}. Requesting new league account.` + "`")
-                requestLeagueAccount(defaultBotChannel, newMember.user, `leagueaccount ${newMember.nickname}`, newMember.nickname);
+            if (config.updateAccountByDiscordName == true) {
+                var elyonMember = await getElyonMemberFromDiscord(newMember.id);
+                if (elyonMember.leagueAccounts.length == 0) {
+                    let guild = client.guilds.cache.find(g => g.id === config.serverID);
+                    let defaultBotChannel = guild.channels.cache.find(channel => channel.name === config.defaultBotChannelName);
+                    defaultBotChannel.send("`" + `${oldMember.displayName} changed nickname to ${newMember.displayName}. Requesting new league account.` + "`")
+                    requestLeagueAccount(defaultBotChannel, newMember.user, `leagueaccount ${newMember.nickname}`, newMember.nickname);
+                }
             }
         }
         //If role was added
