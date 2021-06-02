@@ -1,11 +1,11 @@
 var configFile = './' + __filename.slice(__dirname.length + 1, -3) + 'Config.json'; //gets the correct config accoutn based on this files name
 const Discord = require('discord.js');
 const fs = require('fs');
-const {GoogleSpreadsheet} = require('google-spreadsheet');
+
 const MongoClient = require('mongodb').MongoClient;
 const text2wav = require('text2wav');
 var util = require('util');
-
+// const {GoogleSpreadsheet} = require('google-spreadsheet');
 var Member, LeagueAccount, ListeningMessageEmoji, ModApprovalEmoji, RSVPApprovalEmoji, QuickInhouseListeningMessageEmoji;
 
 
@@ -32,24 +32,6 @@ client.on('ready', async () => {
     
     console.log("Started!");
     checkServerConfiguration();
-    /*
-        try {
-        let guild = client.guilds.cache.find(g => g.id === config.serverID);
-        
-        let role = guild.roles.cache.find(r => r.name === 'Member 農民');
-        let amongUsRole = guild.roles.cache.find(r => r.name === 'Among Us');
-        let leagueRole = guild.roles.cache.find(r => r.name === 'League of Legends');
-        var members = role.members;
-        for (var member of members) {
-            member = member[1]
-                member.roles.add(amongUsRole);
-                await member.roles.add(leagueRole);
-        }
-
-    } catch(err) {
-        console.log(err);
-        }
-        */
 })
 
 
@@ -100,7 +82,8 @@ client.on('messageReactionAdd', (messageReaction, user) => {
 */
 
 
-
+/*
+No longer support loadFromGoogleSpreadSheets because vulnerabilities in npm package.
 async function loadElyonMemberDataSheet() {
     try {
         const doc = new GoogleSpreadsheet(config.elyonMemberDataSheetURL); //Elyon Member Data Sheets
@@ -114,7 +97,7 @@ async function loadElyonMemberDataSheet() {
     }
     return true;
 }
-
+*/
 
 
 function clearRSVP(channel, user) {

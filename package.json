@@ -9,8 +9,7 @@
   "dependencies": {
     "discord.js": "^12.5.3",
     "encodeurl": "^1.0.2",
-    "google-spreadsheet": "^3.1.15",
-    "mongodb": "^3.6.4",
+    "mongodb": "^3.6.9",
     "request": "^2.88.2",
     "request-promise": "^4.2.6",
     "text2wav": "0.0.13"
