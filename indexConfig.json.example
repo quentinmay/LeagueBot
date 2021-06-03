@@ -9,7 +9,7 @@
     "status":"STREAMING",
     "twitchLink":"https://www.twitch.tv/twitch",
     "updateAccountByDiscordName": true,
-    "updateAccountByDiscordName": true,
+    "createAccountOnDiscordJoin": true,
     "mongoElyonMemberListPath": "./util/elyonMembersList.json",
     "elyonMembersListPath":"./util/elyonMembersList.json",
     "listeningMessageEmojisPath":"./util/elyonListeningMessageEmojis.json",
