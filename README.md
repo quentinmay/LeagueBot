@@ -73,6 +73,9 @@ node index.js
 Once your bot is up and running in your discord server, run the command ```!configure``` to add necessary roles/emojis/default text channel.
 
 ![Configure](https://user-images.githubusercontent.com/73214439/107845002-141a0d00-6d8d-11eb-9a53-2135e9ebcbf3.png)
+
+![croppedFixed](https://user-images.githubusercontent.com/73214439/124219394-259c5100-dab1-11eb-87fb-4c3241bccb91.gif)
+
 ## 📝User commands
 | Command        | Description                                                                                        |
 |----------------|----------------------------------------------------------------------------------------------------|
